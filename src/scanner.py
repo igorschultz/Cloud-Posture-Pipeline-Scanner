@@ -83,7 +83,6 @@ class CcValidator:
         return resp_json
 
     def get_results(self, findings):
-        print(findings)
         offending_entries = []
 
         if findings.get("skippedRules"):  # pragma: no cover
@@ -178,6 +177,7 @@ class CcValidator:
 
     def run(self):
         cfn_template_contents = self.read_template_file()
+        print(cfn_template_contents)
         findings = self.run_validation(cfn_template_contents)
         offending_entries = self.get_results(findings)
 
