@@ -183,14 +183,13 @@ class CcValidator:
             else:
                 risk_level_count[risk_level] = 1
         json_finding_report = json.dumps(risk_level_count, indent=4, sort_keys=True)
-        print(json_finding_report)
         return json_finding_report
 
     def run(self):
         cfn_template_contents = self.read_template_file()
         findings = self.run_validation(cfn_template_contents)
         offending_entries = self.get_results(findings)
-        finding_report = self.count_risk_levels(offending_entries)
+        
 
         if not offending_entries:
             logging.info("No offending entries found")
@@ -204,6 +203,7 @@ class CcValidator:
 
         if fail_pipeline:
             logging.critical(f"{num_offending_entries} offending entries found")
+            finding_report = self.count_risk_levels(offending_entries)
             print(f"\nThe pipeline has failed due to the number of misconfigurantions found on the template. \n"
                   f"{finding_report}.")
             sys.exit(1)
