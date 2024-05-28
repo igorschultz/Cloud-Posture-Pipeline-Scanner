@@ -183,6 +183,7 @@ class CcValidator:
             else:
                 risk_level_count[risk_level] = 1
         json_finding_report = json.dumps(risk_level_count, indent=4, sort_keys=True)
+        print(json_finding_report)
         return json_finding_report
 
     def run(self):
