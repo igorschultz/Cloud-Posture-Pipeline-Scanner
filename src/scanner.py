@@ -174,17 +174,6 @@ class CcValidator:
             logging.critical(f"Unknown file extension for template: {template_extension}")
             sys.exit(1)
 
-    def count_risk_levels(self, offending_entries):
-        risk_level_count = {}
-        for item in offending_entries:
-            risk_level = item.get("riskLevel")
-            if risk_level in risk_level_count:
-                risk_level_count[risk_level] += 1
-            else:
-                risk_level_count[risk_level] = 1
-        json_finding_report = json.dumps(risk_level_count, indent=4, sort_keys=True)
-        return json_finding_report
-
     def run(self):
         cfn_template_contents = self.read_template_file()
         findings = self.run_validation(cfn_template_contents)
@@ -200,10 +189,7 @@ class CcValidator:
         fail_pipeline = self._fail_pipeline(cfn_template_contents)
 
         if fail_pipeline:
-            logging.critical(f"\n{num_offending_entries} offending entries found. \n"
-                             "The pipeline has failed due to the number of misconfigurantions found on the template")
-            risk_report = self.count_risk_levels(offending_entries)
-            logging.critical(f"{risk_report}")
+            logging.critical(f"\n{num_offending_entries} offending entries found.")
             sys.exit(1)
 
         else:
