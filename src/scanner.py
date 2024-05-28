@@ -64,7 +64,7 @@ class CcValidator:
 
         payload = json.dumps({
             "type": "cloudformation-template",
-            "contents": cfn_template_contents
+            "content": cfn_template_contents
         })
 
         resp = requests.request(method="POST", url=cfn_scan_endpoint, headers=headers, data=payload)
@@ -177,7 +177,6 @@ class CcValidator:
 
     def run(self):
         cfn_template_contents = self.read_template_file()
-        print(cfn_template_contents)
         findings = self.run_validation(cfn_template_contents)
         offending_entries = self.get_results(findings)
 
