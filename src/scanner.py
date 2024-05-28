@@ -189,8 +189,6 @@ class CcValidator:
         cfn_template_contents = self.read_template_file()
         findings = self.run_validation(cfn_template_contents)
         offending_entries = self.get_results(findings)
-        
-
         if not offending_entries:
             logging.info("No offending entries found")
             sys.exit()
@@ -202,10 +200,9 @@ class CcValidator:
         fail_pipeline = self._fail_pipeline(cfn_template_contents)
 
         if fail_pipeline:
-            logging.critical(f"{num_offending_entries} offending entries found")
-            finding_report = self.count_risk_levels(offending_entries)
-            print(f"\nThe pipeline has failed due to the number of misconfigurantions found on the template. \n"
-                  f"{finding_report}.")
+            logging.critical(f"\n{num_offending_entries} offending entries found. \n"
+                             "The pipeline has failed due to the number of misconfigurantions found on the template")
+            self.count_risk_levels(offending_entries)
             sys.exit(1)
 
         else:
