@@ -54,17 +54,7 @@ class CcValidator:
 
         return cfn_contents
 
-    @staticmethod
-    def generate_payload(cfn_template_contents):
-
-        payload = json.dumps({
-            "type": "cloudformation-template",
-            "contents": cfn_template_contents
-        })
-
-        return payload
-
-    def run_validation(self, payload):
+    def run_validation(self, cfn_template_contents):
         cfn_scan_endpoint = "https://api.xdr.trendmicro.com/beta/cloudPosture/scanTemplate"
 
         headers = {
@@ -72,9 +62,15 @@ class CcValidator:
             "Authorization": "Bearer " + self.api_key,
         }
 
+        payload = json.dumps({
+            "type": "cloudformation-template",
+            "contents": cfn_template_contents
+        })
+
         resp = requests.request(method="POST", url=cfn_scan_endpoint, headers=headers, data=payload)
         resp_json = json.loads(resp.text)
         json_output = json.dumps(resp_json, indent=4, sort_keys=True)
+        print(resp_json)
         logging.debug(f"Received the following response:\n{json_output}")
 
         message = resp_json.get("Message")
@@ -182,8 +178,7 @@ class CcValidator:
 
     def run(self):
         cfn_template_contents = self.read_template_file()
-        payload = self.generate_payload(cfn_template_contents)
-        findings = self.run_validation(payload)
+        findings = self.run_validation(cfn_template_contents)
         offending_entries = self.get_results(findings)
 
         if not offending_entries:
