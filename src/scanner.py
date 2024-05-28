@@ -202,7 +202,8 @@ class CcValidator:
         if fail_pipeline:
             logging.critical(f"\n{num_offending_entries} offending entries found. \n"
                              "The pipeline has failed due to the number of misconfigurantions found on the template")
-            self.count_risk_levels(offending_entries)
+            risk_report = self.count_risk_levels(offending_entries)
+            logging.critical(f"{risk_report}")
             sys.exit(1)
 
         else:
